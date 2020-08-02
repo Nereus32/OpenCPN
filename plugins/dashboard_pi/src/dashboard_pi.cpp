@@ -53,6 +53,7 @@ int g_iDashSOGDamp;
 int g_iDashDepthUnit;
 int g_iDashDistanceUnit;
 int g_iDashWindSpeedUnit;
+int g_iDashTemperatureUnit;
 int g_iUTCOffset;
 double g_dDashDBTOffset;
 
@@ -311,6 +312,24 @@ wxString GetUUID(void)
 wxString MakeName()
 {
     return _T("DASH_") + GetUUID();
+}
+
+// implement rule for *TMP and *ATMP sentences according g_iDashTemperatureUnit selection (C=0, F=1)
+void checkNMEATemperatureDataAndUnit(double &TemperatureValue, wxString &TemperatureUnitOfMeasurement)
+{
+    if ( (TemperatureUnitOfMeasurement == _T("C")) && (g_iDashTemperatureUnit == 0) )
+        return;
+    if ( (TemperatureUnitOfMeasurement == _T("F")) && (g_iDashTemperatureUnit == 1) )
+        return;
+    if ( TemperatureUnitOfMeasurement == _T("C") ) {
+        TemperatureUnitOfMeasurement = _T("F");
+        TemperatureValue = TemperatureValue * 1.8 + 32.0;
+        return;
+    } // then convert Celcius to Fahrenheit
+    // otherwise, convert Fahrenheit to Celcius
+    TemperatureUnitOfMeasurement = _T("C");
+    TemperatureValue = (TemperatureValue - 32.0) / 1.8;
+    return;
 }
 
 //---------------------------------------------------------------------------------------------------------
