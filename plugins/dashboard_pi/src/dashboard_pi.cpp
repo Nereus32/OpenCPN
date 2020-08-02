@@ -1585,6 +1585,7 @@ bool dashboard_pi::SaveConfig( void )
         pConf->Write( _T("DepthOffset"), g_dDashDBTOffset );
         pConf->Write( _T("DistanceUnit"), g_iDashDistanceUnit );
         pConf->Write( _T("WindSpeedUnit"), g_iDashWindSpeedUnit );
+	pConf->Write( _T("TemperatureUnit"), g_iDashTemperatureUnit );
         pConf->Write( _T("UTCOffset"), g_iUTCOffset );
 
         pConf->Write( _T("DashboardCount" ), (int) m_ArrayOfDashboardWindow.GetCount() );
@@ -1968,6 +1969,15 @@ DashboardPreferencesDialog::DashboardPreferencesDialog( wxWindow *parent, wxWind
     m_pChoiceWindSpeedUnit = new wxChoice( itemPanelNotebook02, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_WSpeedUnitNChoices, m_WSpeedUnitChoices, 0 );
     m_pChoiceWindSpeedUnit->SetSelection( g_iDashWindSpeedUnit );
     itemFlexGridSizer04->Add( m_pChoiceWindSpeedUnit, 0, wxALIGN_RIGHT | wxALL, 0 );
+		
+ wxStaticText* itemStaticText0c = new wxStaticText( itemPanelNotebook02, wxID_ANY, _("Temperature units:"),
+    wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer04->Add( itemStaticText0c, 0, wxEXPAND | wxALL, border_size );
+    wxString m_TempUnitChoices[] = { _("Celsius"), _("Fahrenheit") };
+    int m_TempUnitNChoices = sizeof( m_TempUnitChoices ) / sizeof( wxString );
+    m_pChoiceTemperatureUnit = new wxChoice( itemPanelNotebook02, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_TempUnitNChoices, m_TempUnitChoices, 0 );
+    m_pChoiceTemperatureUnit->SetSelection( g_iDashTemperatureUnit );
+    itemFlexGridSizer04->Add( m_pChoiceTemperatureUnit, 0, wxALIGN_RIGHT | wxALL, 0 );
 
 
     wxStdDialogButtonSizer* DialogButtonSizer = CreateStdDialogButtonSizer( wxOK | wxCANCEL );
@@ -2020,6 +2030,9 @@ void DashboardPreferencesDialog::SaveDashboardConfig()
     g_iDashDepthUnit = m_pChoiceDepthUnit->GetSelection() + 3;
     g_iDashDistanceUnit = m_pChoiceDistanceUnit->GetSelection() - 1;
     g_iDashWindSpeedUnit = m_pChoiceWindSpeedUnit->GetSelection();
+	
+g_iDashTemperatureUnit = m_pChoiceTemperatureUnit->GetSelection();
+	
     if( curSel != -1 ) {
         DashboardWindowContainer *cont = m_Config.Item( curSel );
         cont->m_bIsVisible = m_pCheckBoxIsVisible->IsChecked();
