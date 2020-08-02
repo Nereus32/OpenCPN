@@ -1486,6 +1486,8 @@ bool dashboard_pi::LoadConfig( void )
         pConf->Read( _T("WindSpeedUnit"), &g_iDashWindSpeedUnit, 0 );
 
         pConf->Read( _T("UTCOffset"), &g_iUTCOffset, 0 );
+	    
+	pConf->Read( _T("TemperatureUnit"), &g_iDashTemperatureUnit, 0 );
 
         int d_cnt;
         pConf->Read( _T("DashboardCount"), &d_cnt, -1 );
